@@ -1,54 +1,59 @@
 import { useState } from 'react'
 import axios from 'axios'
-import React from 'react'
 import { Modal } from 'react-bootstrap'
 
-  const Serverlogin = () => {
-  const [email,setemail]  =useState(null)
-  const [password,setpassword] =useState(null)
 
 
 
-  const Loginuser = async() => {
+const Serverlogin = () => {
+  const [email,setemail]=useState(null)
+  const [password,setpassword]=useState(null)
+  const [Displayed,setDisplayed] = useState(false)
 
 
-  const data = new FormData()
-   data.append("email",email)
-   data.append("password",password)
-  const response = await axios.post("https://manojkoravangi.com/login.php",data,{Headers:{'content-type':'multipart/form-data'}})
-
+  const userlogin =async () => {
+    const data=new FormData()
+    data.append("email",email)
+    data.append("password",password)
+    const response = await axios.post("https://manojkoravangi.com/login.php",data,{headers:{'content-type':'multipart/form-data'}})
+   
+   
     if(response){
-      console.log(response.data)
+      console.log(response.data.data)
       if(response.data.status==='success'){
-        localStorage.setItem("user_data",JSON.stringify(response.data.data))
-        window.location.replace('/account')
-        setdisplay(true)
-
+        setDisplayed(true)
+        localStorage.setItem("user_id", JSON.stringify(response.data.data))  
+   
+        
+      }else{
+        setDisplayed(false)
       }
-      else{
-        setdisplay(false)
-      }
-      }
-    }
-    const[display,setdisplay] = useState(false)
-  return (
-    <>
-    <div>
-       <Modal show={display} onHide={()=>setdisplay(false)}>
-       <Modal.Body>
-       <h4>Invalid credentials</h4>
-       </Modal.Body>
-        </Modal>
-        <div className='col-lg-4 mx-auto p-3'>
-        <input  placeholder="Enter your email" onChange= {(event)=> setemail(event.target.value)}></input>
-        <input  placeholder="Enter your password" onChange= {(event)=> setpassword(event.target.value)}></input>
       
-       <button className=',btn btn-warning w-100 m-3' onClick={Loginuser}>add</button>
-    </div>
-   </div>
-   </>
-  )
 
+    }
+  }
+
+  return (
+  
+  <div>
+   
+
+      <Modal show={Displayed} onHide={()=>setDisplayed(false)}>
+      <Modal.Body>
+      <h1>invalid creditionals</h1>
+      </Modal.Body>
+      </Modal>
+      <div className='col-lg-4 mx-auto p-3'>
+        <input  placeholder="Enter your email" onChange= {(event)=>setemail(event.target.value)}></input>
+        <input  placeholder="Enter your password" onChange= {(event)=>setpassword(event.target.value)}></input>
+      
+       <button className='btn btn-success w-100 m-3' onClick={userlogin}>add</button>
+    </div>
+ 
+  </div>
+  
+   
+  )
 }
 
 export default Serverlogin
